@@ -15,9 +15,9 @@ export const NewsSchema = new Schema<NewsDocument>(
   {
     strapiId: { type: Number, required: true, unique: true },
     titulo: { type: String, required: true },
-    descripcion: { type: String, required: true },
-    autor: { type: String, required: true },
-    categoria: { type: String, required: true },
+    descripcion: { type: String, required: false, default: '' },
+    autor: { type: String, required: false, default: '' },
+    categoria: { type: String, required: false, default: '' },
     imagen: { type: String, default: null },
   },
   {
