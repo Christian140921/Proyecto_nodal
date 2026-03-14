@@ -34,6 +34,8 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=1337
+    env_file:
+      - ../strapi-cms/.env
     volumes:
       - strapi-data:/app/.tmp
       - strapi-uploads:/app/public/uploads

@@ -1,6 +1,6 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
-RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
+RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev python3
 
 WORKDIR /app
 
