@@ -1,4 +1,3 @@
-# Dockerfile para Strapi
 FROM node:18-alpine
 
 RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev

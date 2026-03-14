@@ -1,13 +1,6 @@
-# Docker Compose - Proyecto CQRS (Base)
-# Levanta Strapi CMS y las bases de datos MongoDB para los futuros microservicios
-
 version: '3.8'
 
 services:
-  # ==========================================
-  # BASES DE DATOS MONGODB PARA MICROSERVICIOS
-  # ==========================================
-
   mongo-noticias:
     image: mongo:7
     container_name: mongo-noticias
@@ -30,10 +23,6 @@ services:
     networks:
       - cqrs-network
 
-  # ==========================================
-  # STRAPI CMS
-  # ==========================================
-
   strapi:
     build:
       context: ../strapi-cms
@@ -51,16 +40,11 @@ services:
     networks:
       - cqrs-network
 
-# ==========================================
-# VOLÚMENES Y REDES
-# ==========================================
-
 volumes:
   mongo-noticias-data:
   mongo-eventos-data:
   strapi-data:
   strapi-uploads:
-
 
 networks:
   cqrs-network:
