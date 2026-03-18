@@ -32,7 +32,7 @@ async function syncEvento(eventoId: number, strapiInstance: any) {
 
     console.log(`[CQRS] Enviando Evento #${evento.id} al microservicio en ${host}:${port}...`);
     
-    await sendTcpMessage(host, port, { cmd: 'sync_evento' }, payload);
+    await sendTcpMessage(host, port, { cmd: 'sync_event' }, payload);
     console.log(`[CQRS] Evento #${evento.id} sincronizado con el microservicio.`);
     
   } catch (error) {

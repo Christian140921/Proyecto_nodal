@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-noticias
+  labels:
+    app: ms-noticias
+spec:
+  ports:
+    - port: 4001
+      targetPort: 4001
+      name: tcp
+  selector:
+    app: ms-noticias
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-noticias
+spec:
+  selector:
+    matchLabels:
+      app: ms-noticias
+  template:
+    metadata:
+      labels:
+        app: ms-noticias
+    spec:
+      containers:
+      - name: ms-noticias
+        image: ms-noticias:latest # Requires build
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 4001
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongo-noticias:27017/ms_noticias_db"

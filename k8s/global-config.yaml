@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+data:
+  MS_NOTICIAS_HOST: "ms-noticias"
+  MS_NOTICIAS_PORT: "4001"
+  MS_EVENTOS_HOST: "ms-eventos"
+  MS_EVENTOS_PORT: "4002"
+  MONGODB_URI_NOTICIAS: "mongodb://mongo-noticias:27017/ms_noticias_db"
+  MONGODB_URI_EVENTOS: "mongodb://mongo-eventos:27017/ms_eventos_db"

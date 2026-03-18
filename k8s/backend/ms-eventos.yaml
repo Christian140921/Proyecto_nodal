@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-eventos
+  labels:
+    app: ms-eventos
+spec:
+  ports:
+    - port: 4002
+      targetPort: 4002
+      name: tcp
+  selector:
+    app: ms-eventos
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-eventos
+spec:
+  selector:
+    matchLabels:
+      app: ms-eventos
+  template:
+    metadata:
+      labels:
+        app: ms-eventos
+    spec:
+      containers:
+      - name: ms-eventos
+        image: ms-eventos:latest # Requires build
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 4002
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongo-eventos:27017/ms_eventos_db"
