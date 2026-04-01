@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { News } from '../../domain/entities/news.entity';
 import { NewsRepository } from '../../domain/repositories/news.repository';
 import { NewsDocument } from '../database/news.schema';

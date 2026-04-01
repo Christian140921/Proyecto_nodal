@@ -1,6 +1,7 @@
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, Types } from 'mongoose';
 
 export interface NewsDocument extends Document {
+QWER6: Types.ObjectId;
   strapiId: number;
   titulo: string;
   descripcion: string;

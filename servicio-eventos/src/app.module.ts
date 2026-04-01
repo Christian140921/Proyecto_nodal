@@ -8,7 +8,12 @@ import { EventController } from './presentation/controllers/event.controller';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27018/ms_eventos_db'),
+    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27018/ms_eventos_db', {
+      retryAttempts: 3,
+      retryDelay: 1000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    }),
     MongooseModule.forFeature([{ name: 'Event', schema: EventSchema }]),
   ],
   controllers: [EventController],

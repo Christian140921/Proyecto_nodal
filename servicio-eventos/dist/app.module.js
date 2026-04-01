@@ -20,7 +20,12 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27018/ms_eventos_db'),
+            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27018/ms_eventos_db', {
+                retryAttempts: 3,
+                retryDelay: 1000,
+                serverSelectionTimeoutMS: 10000,
+                socketTimeoutMS: 45000,
+            }),
             mongoose_1.MongooseModule.forFeature([{ name: 'Event', schema: event_schema_1.EventSchema }]),
         ],
         controllers: [event_controller_1.EventController],

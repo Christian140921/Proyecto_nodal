@@ -8,7 +8,12 @@ import { NewsController } from './presentation/controllers/news.controller';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27020/ms_noticias_db'),
+    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27020/ms_noticias_db', {
+      retryAttempts: 3,
+      retryDelay: 1000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    }),
     MongooseModule.forFeature([{ name: 'News', schema: NewsSchema }]),
   ],
   controllers: [NewsController],
