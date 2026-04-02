@@ -3,6 +3,7 @@ import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { EventSchema } from './infrastructure/database/event.schema';
 import { EventRepositoryImpl } from './infrastructure/repositories/event.repository.impl';
 import { CreateEventUseCase } from './application/use-cases/create-event.usecase';
+import { DeleteEventUseCase } from './application/use-cases/delete-event.usecase';
 import { GetEventsUseCase } from './application/use-cases/get-events.usecase';
 import { EventController } from './presentation/controllers/event.controller';
 
@@ -31,6 +32,11 @@ import { EventController } from './presentation/controllers/event.controller';
     {
       provide: GetEventsUseCase,
       useFactory: (eventRepo) => new GetEventsUseCase(eventRepo),
+      inject: ['EventRepository'],
+    },
+    {
+      provide: DeleteEventUseCase,
+      useFactory: (eventRepo) => new DeleteEventUseCase(eventRepo),
       inject: ['EventRepository'],
     },
   ],

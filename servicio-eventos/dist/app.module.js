@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const event_schema_1 = require("./infrastructure/database/event.schema");
 const event_repository_impl_1 = require("./infrastructure/repositories/event.repository.impl");
 const create_event_usecase_1 = require("./application/use-cases/create-event.usecase");
+const delete_event_usecase_1 = require("./application/use-cases/delete-event.usecase");
 const get_events_usecase_1 = require("./application/use-cases/get-events.usecase");
 const event_controller_1 = require("./presentation/controllers/event.controller");
 let AppModule = class AppModule {
@@ -43,6 +44,11 @@ exports.AppModule = AppModule = __decorate([
             {
                 provide: get_events_usecase_1.GetEventsUseCase,
                 useFactory: (eventRepo) => new get_events_usecase_1.GetEventsUseCase(eventRepo),
+                inject: ['EventRepository'],
+            },
+            {
+                provide: delete_event_usecase_1.DeleteEventUseCase,
+                useFactory: (eventRepo) => new delete_event_usecase_1.DeleteEventUseCase(eventRepo),
                 inject: ['EventRepository'],
             },
         ],

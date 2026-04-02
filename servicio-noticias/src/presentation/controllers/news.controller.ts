@@ -1,12 +1,14 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { CreateNewsUseCase } from '../../application/use-cases/create-news.usecase';
+import { DeleteNewsUseCase } from '../../application/use-cases/delete-news.usecase';
 import { GetNewsUseCase } from '../../application/use-cases/get-news.usecase';
 
 @Controller('news')
 export class NewsController {
   constructor(
     private readonly createNewsUseCase: CreateNewsUseCase,
+    private readonly deleteNewsUseCase: DeleteNewsUseCase,
     private readonly getNewsUseCase: GetNewsUseCase,
   ) {}
 
@@ -33,5 +35,11 @@ export class NewsController {
   }) {
     const news = await this.createNewsUseCase.execute(data);
     return { success: true, data: news };
+  }
+
+  @MessagePattern({ cmd: 'delete_news' })
+  async deleteNews(data: { strapiId: number }) {
+    await this.deleteNewsUseCase.execute(data.strapiId);
+    return { success: true };
   }
 }

@@ -16,12 +16,15 @@ exports.EventController = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const create_event_usecase_1 = require("../../application/use-cases/create-event.usecase");
+const delete_event_usecase_1 = require("../../application/use-cases/delete-event.usecase");
 const get_events_usecase_1 = require("../../application/use-cases/get-events.usecase");
 let EventController = class EventController {
     createEventUseCase;
+    deleteEventUseCase;
     getEventsUseCase;
-    constructor(createEventUseCase, getEventsUseCase) {
+    constructor(createEventUseCase, deleteEventUseCase, getEventsUseCase) {
         this.createEventUseCase = createEventUseCase;
+        this.deleteEventUseCase = deleteEventUseCase;
         this.getEventsUseCase = getEventsUseCase;
     }
     async findAll() {
@@ -43,6 +46,10 @@ let EventController = class EventController {
             console.error('[Event MS] ❌ Error procesando evento:', error.stack || error.message);
             return { success: false, error: error.message };
         }
+    }
+    async deleteEvent(data) {
+        await this.deleteEventUseCase.execute(data.strapiId);
+        return { success: true };
     }
 };
 exports.EventController = EventController;
@@ -66,9 +73,17 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "syncEvent", null);
+__decorate([
+    (0, microservices_1.MessagePattern)({ cmd: 'delete_event' }),
+    __param(0, (0, microservices_1.Payload)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], EventController.prototype, "deleteEvent", null);
 exports.EventController = EventController = __decorate([
     (0, common_1.Controller)('events'),
     __metadata("design:paramtypes", [create_event_usecase_1.CreateEventUseCase,
+        delete_event_usecase_1.DeleteEventUseCase,
         get_events_usecase_1.GetEventsUseCase])
 ], EventController);
 //# sourceMappingURL=event.controller.js.map

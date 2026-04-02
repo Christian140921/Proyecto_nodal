@@ -23,6 +23,9 @@ class EventRepositoryImpl {
         const updated = await this.eventModel.findOneAndUpdate({ strapiId }, { $set: updateData }, { upsert: true, new: true });
         return this.toDomain(updated);
     }
+    async deleteByStrapiId(strapiId) {
+        await this.eventModel.deleteOne({ strapiId }).exec();
+    }
 }
 exports.EventRepositoryImpl = EventRepositoryImpl;
 //# sourceMappingURL=event.repository.impl.js.map

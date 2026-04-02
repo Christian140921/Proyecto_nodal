@@ -38,4 +38,8 @@ export class EventRepositoryImpl implements EventRepository {
 
     return this.toDomain(updated);
   }
+
+  async deleteByStrapiId(strapiId: number): Promise<void> {
+    await this.eventModel.deleteOne({ strapiId }).exec();
+  }
 }

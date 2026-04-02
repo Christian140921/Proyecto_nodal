@@ -9,4 +9,5 @@ export declare class EventRepositoryImpl implements EventRepository {
     findAll(): Promise<Evento[]>;
     findById(id: string): Promise<Evento | null>;
     save(evento: Evento): Promise<Evento>;
+    deleteByStrapiId(strapiId: number): Promise<void>;
 }

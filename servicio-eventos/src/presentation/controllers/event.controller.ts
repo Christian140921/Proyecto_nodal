@@ -1,12 +1,14 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateEventUseCase } from '../../application/use-cases/create-event.usecase';
+import { DeleteEventUseCase } from '../../application/use-cases/delete-event.usecase';
 import { GetEventsUseCase } from '../../application/use-cases/get-events.usecase';
 
 @Controller('events')
 export class EventController {
   constructor(
     private readonly createEventUseCase: CreateEventUseCase,
+    private readonly deleteEventUseCase: DeleteEventUseCase,
     private readonly getEventsUseCase: GetEventsUseCase,
   ) {}
 
@@ -33,5 +35,11 @@ export class EventController {
       console.error('[Event MS] ❌ Error procesando evento:', error.stack || error.message);
       return { success: false, error: error.message };
     }
+  }
+
+  @MessagePattern({ cmd: 'delete_event' })
+  async deleteEvent(@Payload() data: { strapiId: number }) {
+    await this.deleteEventUseCase.execute(data.strapiId);
+    return { success: true };
   }
 }

@@ -1,12 +1,13 @@
 import { sendTcpMessage } from '../../../../utils/tcp-client';
 
+async function isNoticiasSyncEnabled(strapiInstance: any): Promise<boolean> {
+  const configs = await strapiInstance.documents('api::configuracion.configuracion').findMany();
+  return configs.length > 0 ? configs[0].cqrsNoticias : true;
+}
+
 async function syncNoticia(noticiaId: number, strapiInstance: any) {
   try {
-    // 1. Verificar si CQRS está encendido en la configuración global
-    const configs = await strapiInstance.documents('api::configuracion.configuracion').findMany();
-    
-    // Asumimos que hay al menos una config y leemos el toggle
-    const isCqrsEnabled = configs.length > 0 ? configs[0].cqrsNoticias : true; // Por defecto true si no hay config
+    const isCqrsEnabled = await isNoticiasSyncEnabled(strapiInstance);
     
     if (!isCqrsEnabled) {
       console.log(`[CQRS] Noticias sync ignorado porque el toggle cqrsNoticias está apagado.`);
@@ -47,6 +48,27 @@ async function syncNoticia(noticiaId: number, strapiInstance: any) {
   }
 }
 
+async function deleteNoticia(strapiId: number, strapiInstance: any) {
+  try {
+    const isCqrsEnabled = await isNoticiasSyncEnabled(strapiInstance);
+
+    if (!isCqrsEnabled) {
+      console.log(`[CQRS] Noticias delete ignorado porque el toggle cqrsNoticias está apagado.`);
+      return;
+    }
+
+    const host = process.env.MS_NOTICIAS_HOST || 'host.docker.internal';
+    const port = parseInt(process.env.MS_NOTICIAS_PORT || '4001', 10);
+
+    console.log(`[CQRS] Enviando DELETE de Noticia #${strapiId} al microservicio en ${host}:${port}...`);
+
+    await sendTcpMessage(host, port, { cmd: 'delete_news' }, { strapiId });
+    console.log(`[CQRS] Noticia #${strapiId} eliminada en el microservicio.`);
+  } catch (error) {
+    console.error(`[CQRS] Error eliminando Noticia en el microservicio: `, error.stack || error.message);
+  }
+}
+
 export default {
   // Se ejecuta DESPUÉS de crear el documento y de que esté en la DB
   async afterCreate(event) {
@@ -59,10 +81,16 @@ export default {
     const { result } = event;
     await syncNoticia(result.documentId || result.id, strapi);
   },
-  
-  // Opcional: Para notificar el borrado (esto habría que implementarlo en NestJS con cmd: delete_news)
+
   async afterDelete(event) {
-    // const { result } = event;
-    // Podrías enviar TCP msg aquí
+    const { result, params } = event;
+    const deletedId = Number(result?.id ?? params?.where?.id);
+
+    if (!Number.isFinite(deletedId)) {
+      console.warn('[CQRS] No se pudo resolver el id de la noticia eliminada para sincronizar DELETE.');
+      return;
+    }
+
+    await deleteNoticia(deletedId, strapi);
   }
 };

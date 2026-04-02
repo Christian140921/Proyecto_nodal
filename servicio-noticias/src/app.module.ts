@@ -3,6 +3,7 @@ import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { NewsSchema } from './infrastructure/database/news.schema';
 import { NewsRepositoryImpl } from './infrastructure/repositories/news.repository.impl';
 import { CreateNewsUseCase } from './application/use-cases/create-news.usecase';
+import { DeleteNewsUseCase } from './application/use-cases/delete-news.usecase';
 import { GetNewsUseCase } from './application/use-cases/get-news.usecase';
 import { NewsController } from './presentation/controllers/news.controller';
 
@@ -31,6 +32,11 @@ import { NewsController } from './presentation/controllers/news.controller';
     {
       provide: GetNewsUseCase,
       useFactory: (newsRepo) => new GetNewsUseCase(newsRepo),
+      inject: ['NewsRepository'],
+    },
+    {
+      provide: DeleteNewsUseCase,
+      useFactory: (newsRepo) => new DeleteNewsUseCase(newsRepo),
       inject: ['NewsRepository'],
     },
   ],
